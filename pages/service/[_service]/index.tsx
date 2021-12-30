@@ -2,12 +2,14 @@ import {FC, useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import {GetStaticPaths, GetStaticProps} from "next";
 import {API, graphqlOperation} from "aws-amplify";
-import {getBank} from "../../src/graphql/queries";
-import {GET_BANK_ACCOUNT_URL} from "../../src/defaults/services";
+
 import axios from "axios";
 import {Box, Container, Grid, Link, Paper, Typography} from "@mui/material";
-import AddBankAccountButton from "../../src/components/Buttons/AddBankAccountButton";
+
 import NextLink from "next/link";
+import AddBankAccountButton from "../../../src/components/Buttons/AddBankAccountButton";
+import {getBank} from "../../../src/graphql/queries";
+import {GET_BANK_ACCOUNT_URL} from "../../../src/defaults/services";
 
 const Service: FC = ({ bank }) => {
     const [isError, setIsError] = useState(false);
@@ -75,7 +77,7 @@ const Service: FC = ({ bank }) => {
                     <Box sx={{ pt: 2 }} display={'grid'} gap={'12px'} gridTemplateColumns={'repeat(auto-fill, minmax(250px, 1fr))'}>
                         {
                             products.map(product =>
-                                <NextLink href={`/${query._service}/${product.product}`} key={product.product}>
+                                <NextLink href={`/service/${query._service}/product/${product.product}`} key={product.product}>
                                     <Link>
                                         <Box>
                                             <Paper sx={{

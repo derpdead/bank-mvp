@@ -1,20 +1,64 @@
 import {FC, useEffect, useState} from "react";
 import {useRouter} from "next/router";
-import {GetStaticPaths, GetStaticProps} from "next";
-import {API, graphqlOperation} from "aws-amplify";
-import {getBank} from "../../src/graphql/queries";
-import {GET_BANK_ACCOUNT_URL} from "../../src/defaults/services";
-import axios from "axios";
 import {Box, Container, Grid, Link, Paper, Typography} from "@mui/material";
-import AddBankAccountButton from "../../src/components/Buttons/AddBankAccountButton";
-import NextLink from "next/link";
+import {GetStaticPaths, GetStaticProps} from "next";
+import axios from "axios";
+import {GET_BANK_ACCOUNT_URL} from "../../../../src/defaults/services";
+import {API, graphqlOperation} from "aws-amplify";
+import {getBank} from "../../../../src/graphql/queries";
 
-const Product: FC = () => {
+const Product: FC = ({ bank }) => {
+    const [isError, setIsError] = useState(false);
+    const [transactions, setTransactions] = useState([]);
     const {
+        isFallback,
         query,
     } = useRouter();
 
-    console.log(query);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log(query);
+                const formData = new FormData();
+
+                formData.append('servicekey', process.env.SERVICE_API_KEY);
+                formData.append('service', bank.service);
+                formData.append('user', bank.username);
+                formData.append('pass', bank.password);
+                formData.append('products', query._product);
+                formData.append('startdate', '01-01-2000');
+
+                const result = await axios.post(GET_BANK_ACCOUNT_URL, formData);
+
+                const product = result.data.find(service => service.product === query._product)
+
+                console.log();
+
+            } catch (e) {
+                setIsError(true);
+            }
+        }
+
+        if (!isFallback) {
+            fetchData();
+        }
+    }, [isFallback]);
+
+    if (isFallback) {
+        return (
+            <div>
+                Loading...
+            </div>
+        );
+    }
+
+    if (isError) {
+        return (
+            <div>
+                We could not fetch any data for given credentials and product
+            </div>
+        )
+    }
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -61,28 +105,28 @@ const Product: FC = () => {
     )
 }
 
-// export const getStaticPaths: GetStaticPaths<{ slug: string }> = async() => {
-//     return {
-//         paths: [],
-//         fallback: true,
-//     };
-// };
-//
-// export const getStaticProps: GetStaticProps = async(ctx) => {
-//     try {
-//         const { data } = await API.graphql(graphqlOperation(getBank, { id: ctx.params._service }));
-//
-//         return {
-//             props: {
-//                 bank: data.getBank,
-//             }
-//         }
-//     } catch (e) {
-//         console.log('Error', e);
-//         return  {
-//             notFound: true,
-//         }
-//     }
-// }
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async() => {
+    return {
+        paths: [],
+        fallback: true,
+    };
+};
+
+export const getStaticProps: GetStaticProps = async(ctx) => {
+    try {
+        const { data } = await API.graphql(graphqlOperation(getBank, { id: ctx.params._service }));
+
+        return {
+            props: {
+                bank: data.getBank,
+            }
+        }
+    } catch (e) {
+        console.log('Error', e);
+        return  {
+            notFound: true,
+        }
+    }
+}
 
 export default Product;

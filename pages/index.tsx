@@ -46,7 +46,7 @@ const Home: NextPage = () => {
                         <Box sx={{ pt: 2 }} display={'grid'} gap={'12px'} gridTemplateColumns={'repeat(auto-fill, minmax(250px, 1fr))'}>
                             {
                                 accounts.map(account =>
-                                    <NextLink href={`/${account.id}`} key={account.id}>
+                                    <NextLink href={`/service/${account.id}`} key={account.id}>
                                         <Link>
                                             <Box>
                                                 <Paper sx={{
