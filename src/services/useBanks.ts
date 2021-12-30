@@ -5,7 +5,7 @@ import {GET_BANK_LIST_URL} from "../defaults/services";
 
 export const useBanks = () => {
     const {
-        data = [],
+        data = {},
     } = useSWRImmutable('banks', async () => {
         const response = await axios.get(GET_BANK_LIST_URL);
         const supportedBanks = response.data.filter(bank => COUNTRY_CODES.some(countryCode => bank.country_code === countryCode));

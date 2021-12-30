@@ -52,15 +52,6 @@ const AddBankAccountDialog: FC<IAddBankAccountDialogProps> = ({
                         accountId: '',
                     },
                 }))
-                // const formData = new FormData();
-                //
-                // formData.append('servicekey', process.env.SERVICE_API_KEY);
-                // formData.append('service', data.service);
-                // formData.append('user', data.username);
-                // formData.append('pass', data.password);
-                // formData.append('products', 'GLOBAL');
-                //
-                // const result = await axios.post(GET_BANK_ACCOUNT_URL, data);
 
                 await mutate('bankList');
 
