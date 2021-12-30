@@ -16,6 +16,7 @@ export const useBankList = () => {
             }
         }));
 
+
         return result.data.listBanks.items;
     });
 
