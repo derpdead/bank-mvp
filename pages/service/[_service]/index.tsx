@@ -94,7 +94,6 @@ const Service: FC = ({ bank }) => {
                                                 backgroundColor: (theme) =>  theme.palette.grey[100],
                                                 border: (theme) =>  `1px solid ${theme.palette.grey[300]}`,
                                             }}
-
                                                    elevation={0}>
                                                 <Typography component="h4" variant="h6" align="center" color={(theme => theme.palette.secondary.light)}>
                                                     {product.product}
