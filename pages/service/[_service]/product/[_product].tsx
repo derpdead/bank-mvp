@@ -10,7 +10,7 @@ import {
     TableBody,
     TableCell,
     TableHead,
-    TableRow,
+    TableRow, TextField,
     Typography
 } from "@mui/material";
 import {GetStaticPaths, GetStaticProps} from "next";
@@ -18,8 +18,14 @@ import axios from "axios";
 import {GET_BANK_ACCOUNT_URL} from "../../../../src/defaults/services";
 import {API, graphqlOperation} from "aws-amplify";
 import {getBank} from "../../../../src/graphql/queries";
+import MobileDatePicker from '@mui/lab/MobileDatePicker';
+import {format} from "date-fns";
+
+const initStartDate = new Date('01-01-2000');
 
 const Product: FC = ({ bank }) => {
+    const [startDate, setStartDate] = useState(initStartDate);
+    const [shouldRefresh, setShouldRefresh] = useState(true);
     const [isError, setIsError] = useState(false);
     const [transactions, setTransactions] = useState([]);
     const {
@@ -39,7 +45,7 @@ const Product: FC = ({ bank }) => {
                 formData.append('user', bank.username);
                 formData.append('pass', bank.password);
                 formData.append('products', query._product);
-                formData.append('startdate', '01-01-2000');
+                formData.append('startdate', format(startDate, 'dd-MM-yyyy'));
 
                 const result = await axios.post(GET_BANK_ACCOUNT_URL, formData);
 
@@ -48,15 +54,18 @@ const Product: FC = ({ bank }) => {
                 if (product) {
                     setTransactions(product.transactions);
                 }
+
+                setShouldRefresh(false);
             } catch (e) {
                 setIsError(true);
+                setShouldRefresh(false);
             }
         }
 
-        if (!isFallback) {
+        if (!isFallback && shouldRefresh) {
             fetchData();
         }
-    }, [isFallback]);
+    }, [isFallback, shouldRefresh]);
 
     if (isFallback) {
         return (
@@ -78,20 +87,46 @@ const Product: FC = ({ bank }) => {
         back();
     }
 
+    const handleClickRefresh = () => {
+        setShouldRefresh(true);
+    }
+
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                            Transactions
-                        </Typography>
-                        <Button
-                            variant={'contained'}
-                            size={'small'}
-                            onClick={handleClickBack}>
-                            Back
-                        </Button>
+                    <Box sx={{ pb: 2, display: 'flex', justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex' }}>
+                            <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                                Transactions
+                            </Typography>
+                            <Box sx={{ pl: 2 }}>
+                                <MobileDatePicker
+                                    label="Start date"
+                                    value={startDate}
+                                    onChange={(newValue) => {
+                                        setStartDate(newValue);
+                                    }}
+                                    renderInput={(params) => <TextField size={'small'} {...params} />}
+                                />
+                            </Box>
+                        </Box>
+                        <Box sx={{ display: 'flex' }}>
+                            <Box sx={{ pr: 2, display: 'flex' }}>
+                                <Button
+                                    variant={'contained'}
+                                    size={'small'}
+                                    onClick={handleClickRefresh}>
+                                    Refresh
+                                </Button>
+                            </Box>
+                            <Button
+                                variant={'contained'}
+                                size={'small'}
+                                onClick={handleClickBack}>
+                                Back
+                            </Button>
+                        </Box>
                     </Box>
                     <Table size="small">
                         <TableHead>
