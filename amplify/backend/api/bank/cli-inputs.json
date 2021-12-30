@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "bank",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "/Users/maciejkaczorowski/Sites/bank-mvp/bank/amplify/backend/api/bank/schema.graphql",
+    "defaultAuthType": {
+      "mode": "API_KEY",
+      "expirationTime": 7
+    }
+  }
+}
