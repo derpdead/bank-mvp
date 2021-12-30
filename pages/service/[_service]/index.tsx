@@ -4,7 +4,7 @@ import {GetStaticPaths, GetStaticProps} from "next";
 import {API, graphqlOperation} from "aws-amplify";
 
 import axios from "axios";
-import {Box, Container, Grid, Link, Paper, Typography} from "@mui/material";
+import {Box, Button, Container, Grid, Link, Paper, Typography} from "@mui/material";
 
 import NextLink from "next/link";
 import AddBankAccountButton from "../../../src/components/Buttons/AddBankAccountButton";
@@ -17,6 +17,7 @@ const Service: FC = ({ bank }) => {
     const {
         isFallback,
         query,
+        back,
     } = useRouter();
 
     useEffect(() => {
@@ -31,8 +32,6 @@ const Service: FC = ({ bank }) => {
                 formData.append('products', 'GLOBAL');
 
                 const result = await axios.post(GET_BANK_ACCOUNT_URL, formData);
-
-                console.log(result.data);
 
                 setProducts(result.data);
             } catch (e) {
@@ -62,7 +61,9 @@ const Service: FC = ({ bank }) => {
         )
     }
 
-    console.log(query);
+    const handleClickBack = () => {
+        back();
+    }
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -72,7 +73,12 @@ const Service: FC = ({ bank }) => {
                         <Typography component="h2" variant="h6" color="primary" gutterBottom>
                             Products
                         </Typography>
-                        <AddBankAccountButton />
+                        <Button
+                            variant={'contained'}
+                            size={'small'}
+                            onClick={handleClickBack}>
+                            Back
+                        </Button>
                     </Box>
                     <Box sx={{ pt: 2 }} display={'grid'} gap={'12px'} gridTemplateColumns={'repeat(auto-fill, minmax(250px, 1fr))'}>
                         {

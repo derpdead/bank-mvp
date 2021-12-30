@@ -1,6 +1,18 @@
 import {FC, useEffect, useState} from "react";
 import {useRouter} from "next/router";
-import {Box, Container, Grid, Link, Paper, Typography} from "@mui/material";
+import {
+    Box, Button,
+    Container,
+    Grid,
+    Link,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from "@mui/material";
 import {GetStaticPaths, GetStaticProps} from "next";
 import axios from "axios";
 import {GET_BANK_ACCOUNT_URL} from "../../../../src/defaults/services";
@@ -13,6 +25,7 @@ const Product: FC = ({ bank }) => {
     const {
         isFallback,
         query,
+        back,
     } = useRouter();
 
     useEffect(() => {
@@ -32,8 +45,9 @@ const Product: FC = ({ bank }) => {
 
                 const product = result.data.find(service => service.product === query._product)
 
-                console.log();
-
+                if (product) {
+                    setTransactions(product.transactions);
+                }
             } catch (e) {
                 setIsError(true);
             }
@@ -60,47 +74,49 @@ const Product: FC = ({ bank }) => {
         )
     }
 
+    const handleClickBack = () => {
+        back();
+    }
+
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            Product
-            {/*<Grid item xs={12}>*/}
-            {/*    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>*/}
-            {/*        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>*/}
-            {/*            <Typography component="h2" variant="h6" color="primary" gutterBottom>*/}
-            {/*                Products*/}
-            {/*            </Typography>*/}
-            {/*            <AddBankAccountButton />*/}
-            {/*        </Box>*/}
-            {/*        <Box sx={{ pt: 2 }} display={'grid'} gap={'12px'} gridTemplateColumns={'repeat(auto-fill, minmax(250px, 1fr))'}>*/}
-            {/*            {*/}
-            {/*                products.map(product =>*/}
-            {/*                    <NextLink href={`/${query._service}/${product.product}`} key={product.product}>*/}
-            {/*                        <Link>*/}
-            {/*                            <Box>*/}
-            {/*                                <Paper sx={{*/}
-            {/*                                    p: 2,*/}
-            {/*                                    display: 'flex',*/}
-            {/*                                    flexDirection: 'column',*/}
-            {/*                                    height: '100%',*/}
-            {/*                                    backgroundColor: (theme) =>  theme.palette.grey[100],*/}
-            {/*                                    border: (theme) =>  `1px solid ${theme.palette.grey[300]}`,*/}
-            {/*                                }}*/}
-            {/*                                       elevation={0}>*/}
-            {/*                                    <Typography component="h4" variant="h6" align="center" color={(theme => theme.palette.secondary.light)}>*/}
-            {/*                                        {product.product}*/}
-            {/*                                    </Typography>*/}
-            {/*                                    <Typography sx={{ pt: 1 }} variant="body2" align="center">*/}
-            {/*                                        {product.description}*/}
-            {/*                                    </Typography>*/}
-            {/*                                </Paper>*/}
-            {/*                            </Box>*/}
-            {/*                        </Link>*/}
-            {/*                    </NextLink>*/}
-            {/*                )*/}
-            {/*            }*/}
-            {/*        </Box>*/}
-            {/*    </Paper>*/}
-            {/*</Grid>*/}
+            <Grid item xs={12}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                            Transactions
+                        </Typography>
+                        <Button
+                            variant={'contained'}
+                            size={'small'}
+                            onClick={handleClickBack}>
+                            Back
+                        </Button>
+                    </Box>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Date</TableCell>
+                                <TableCell>Date 2</TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell>Amount</TableCell>
+                                <TableCell align="right">Balance</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {transactions.map((row) => (
+                                <TableRow key={row.transactionId}>
+                                    <TableCell>{row.date}</TableCell>
+                                    <TableCell>{row.date2}</TableCell>
+                                    <TableCell>{row.description}</TableCell>
+                                    <TableCell>{row.amount}</TableCell>
+                                    <TableCell align="right">{`$${row.balance}`}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </Paper>
+            </Grid>
         </Container>
     )
 }
