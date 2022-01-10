@@ -31,7 +31,9 @@ const Service: FC = ({ bank }) => {
                 formData.append('pass', bank.password);
                 formData.append('products', 'GLOBAL');
 
-                const result = await axios.post(GET_BANK_ACCOUNT_URL, formData);
+                const result = await axios.post(GET_BANK_ACCOUNT_URL, formData, {
+                    withCredentials: false,
+                });
 
                 setProducts(result.data);
             } catch (e) {

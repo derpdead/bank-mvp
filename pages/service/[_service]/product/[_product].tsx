@@ -37,7 +37,6 @@ const Product: FC = ({ bank }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log(query);
                 const formData = new FormData();
 
                 formData.append('servicekey', process.env.SERVICE_API_KEY);
@@ -47,7 +46,9 @@ const Product: FC = ({ bank }) => {
                 formData.append('products', query._product);
                 formData.append('startdate', format(startDate, 'dd-MM-yyyy'));
 
-                const result = await axios.post(GET_BANK_ACCOUNT_URL, formData);
+                const result = await axios.post(GET_BANK_ACCOUNT_URL, formData, {
+                    withCredentials: false,
+                });
 
                 const product = result.data.find(service => service.product === query._product)
 
