@@ -14,12 +14,11 @@ import {
     Typography
 } from "@mui/material";
 import {GetStaticPaths, GetStaticProps} from "next";
-import axios from "axios";
-import {GET_BANK_ACCOUNT_URL} from "../../../../src/defaults/services";
 import {API, graphqlOperation} from "aws-amplify";
 import {getBank} from "../../../../src/graphql/queries";
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import {format} from "date-fns";
+import axios from "../../../../src/services/axios";
 
 const initStartDate = new Date('01-01-2000');
 
@@ -37,19 +36,7 @@ const Product: FC = ({ bank }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const formData = new FormData();
-
-                formData.append('servicekey', process.env.SERVICE_API_KEY);
-                formData.append('service', bank.service);
-                formData.append('user', bank.username);
-                formData.append('pass', bank.password);
-                formData.append('products', query._product);
-                formData.append('startdate', format(startDate, 'dd-MM-yyyy'));
-
-                const result = await axios.post(GET_BANK_ACCOUNT_URL, formData, {
-                    withCredentials: false,
-                });
-
+                const result = await axios.post('/api/form', {bank, products: query._product, startdate: format(startDate, 'dd-MM-yyyy')});
                 const product = result.data.find(service => service.product === query._product)
 
                 if (product) {

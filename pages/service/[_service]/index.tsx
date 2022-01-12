@@ -3,13 +3,11 @@ import {useRouter} from "next/router";
 import {GetStaticPaths, GetStaticProps} from "next";
 import {API, graphqlOperation} from "aws-amplify";
 
-import axios from "axios";
 import {Box, Button, Container, Grid, Link, Paper, Typography} from "@mui/material";
 
 import NextLink from "next/link";
-import AddBankAccountButton from "../../../src/components/Buttons/AddBankAccountButton";
 import {getBank} from "../../../src/graphql/queries";
-import {GET_BANK_ACCOUNT_URL} from "../../../src/defaults/services";
+import axios from "../../../src/services/axios";
 
 const Service: FC = ({ bank }) => {
     const [isError, setIsError] = useState(false);
@@ -23,17 +21,7 @@ const Service: FC = ({ bank }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const formData = new FormData();
-
-                formData.append('servicekey', process.env.SERVICE_API_KEY);
-                formData.append('service', bank.service);
-                formData.append('user', bank.username);
-                formData.append('pass', bank.password);
-                formData.append('products', 'GLOBAL');
-
-                const result = await axios.post(GET_BANK_ACCOUNT_URL, formData, {
-                    withCredentials: false,
-                });
+                const result = await axios.post('/api/form', { bank });
 
                 setProducts(result.data);
             } catch (e) {
@@ -46,14 +34,7 @@ const Service: FC = ({ bank }) => {
         }
     }, [isFallback]);
 
-
-    if (isFallback) {
-        return (
-            <div>
-                Loading...
-            </div>
-        );
-    }
+    if (isFallback) return <div>Loading...</div>
 
     if (isError) {
         return (
