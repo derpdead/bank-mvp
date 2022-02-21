@@ -60,7 +60,20 @@ const AddBankAccountDialog: FC<IAddBankAccountDialogProps> = ({
                 console.error(e);
             }
         } else {
-            setActiveStep(activeStep + 1);
+            // setActiveStep(activeStep + 1);
+
+            try {
+                const response = await axios.post('/api/consent-get', {
+                    service: data.service,
+                    redirectTo: window.location.href,
+                });
+
+                global.open(response.data.follow, '_new');
+
+                // onClose();
+            } catch (e) {
+                console.error(e);
+            }
         }
     };
 
@@ -94,30 +107,41 @@ const AddBankAccountDialog: FC<IAddBankAccountDialogProps> = ({
 
     return (
         <Dialog open={open} fullWidth={true} maxWidth={'sm'} onClose={onClose}>
-            <DialogTitle>Add bank</DialogTitle>
+            <DialogTitle>Login via bank</DialogTitle>
             <DialogContent>
-                <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-                {getStepContent(activeStep)}
+                {/*<Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>*/}
+                {/*    {steps.map((label) => (*/}
+                {/*        <Step key={label}>*/}
+                {/*            <StepLabel>{label}</StepLabel>*/}
+                {/*        </Step>*/}
+                {/*    ))}*/}
+                {/*</Stepper>*/}
+                {/*{getStepContent(activeStep)}*/}
+                <BankDetailsForm
+                    countryCode={data.countryCode}
+                    service={data.service}
+                    onValueChange={onValueChange} />
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{ pr: 2, pb: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    {activeStep !== 0 && (
-                        <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                            Back
-                        </Button>
-                    )}
+                    {/*{activeStep !== 0 && (*/}
+                    {/*    <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>*/}
+                    {/*        Back*/}
+                    {/*    </Button>*/}
+                    {/*)}*/}
+                    {/*<Button*/}
+                    {/*    variant="contained"*/}
+                    {/*    onClick={handleNext}*/}
+                    {/*    sx={{ mt: 3, ml: 1 }}*/}
+                    {/*>*/}
+                    {/*    {activeStep === steps.length - 1 ? 'Add' : 'Next'}*/}
+                    {/*</Button>*/}
                     <Button
                         variant="contained"
                         onClick={handleNext}
                         sx={{ mt: 3, ml: 1 }}
                     >
-                        {activeStep === steps.length - 1 ? 'Add' : 'Next'}
+                        {'Login'}
                     </Button>
                 </Box>
             </DialogActions>

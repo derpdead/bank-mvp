@@ -7,7 +7,5 @@ type Bank @model {
   cognitoId: String!
   countryCode: String!
   service: String!
-  username: String!
-  password: String!
-  accountId: String!
+  token: String!
 }

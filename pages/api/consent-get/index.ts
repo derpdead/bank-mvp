@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {GET_BANK_ACCOUNT_URL} from "../../../src/defaults/services";
+import {GET_BANK_ACCOUNT_URL, POST_CONSENT_GET} from "../../../src/defaults/services";
 import axios from "axios";
 
 type ResponseData = {
@@ -12,20 +12,16 @@ export default async function handler(
 ) {
     try {
         const FormData = require('form-data');
-
         const formData = new FormData();
 
         formData.append('servicekey', 'l0vz1obtyaxlpfwl');
-        formData.append('service', req.body.bank.service);
-        formData.append('user', req.body.bank.username);
-        formData.append('pass', req.body.bank.password);
-        formData.append('products', req.body.products ? req.body.products : 'GLOBAL');
+        formData.append('service', req.body.service);
+        formData.append('grantType', 'read');
+        formData.append('validUntil', '15-05-2022');
+        // formData.append('yourConsentCallback', req.body.redirectTo);
+        formData.append('yourConsentCallback', 'https://www.google.com');
 
-        if (req.body.startdate) {
-            formData.append('startdate', req.body.startdate);
-        }
-
-        const result = await axios.post(GET_BANK_ACCOUNT_URL, formData, {
+        const result = await axios.post(POST_CONSENT_GET, formData, {
             headers: formData.getHeaders()
         });
 

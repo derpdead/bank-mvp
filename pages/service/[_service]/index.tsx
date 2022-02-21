@@ -66,7 +66,7 @@ const Service: FC = ({ bank }) => {
                     <Box sx={{ pt: 2 }} display={'grid'} gap={'12px'} gridTemplateColumns={'repeat(auto-fill, minmax(250px, 1fr))'}>
                         {
                             products.map(product =>
-                                <NextLink href={`/service/${query._service}/product/${product.product}`} key={product.product}>
+                                <NextLink href={`/service/${query._service}/product/${product.product}`} key={product.product} prefetch={false}>
                                     <Link>
                                         <Box>
                                             <Paper sx={{

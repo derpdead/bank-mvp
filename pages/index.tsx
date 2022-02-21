@@ -4,9 +4,11 @@ import {useBankList} from "../src/services/useBankList";
 import {Box, Button, Container, Grid, Link, Paper, Typography} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import AddBankAccountButton from "../src/components/Buttons/AddBankAccountButton";
-import {useMemo} from "react";
+import {useEffect, useMemo} from "react";
 import {useBanks} from "../src/services/useBanks";
 import NextLink from 'next/link'
+import {GET_SUPPORTED_BANK_LIST_URL} from "../src/defaults/services";
+import axios from "axios";
 
 const Home: NextPage = () => {
     const banks = useBanks();
@@ -17,13 +19,17 @@ const Home: NextPage = () => {
             return [];
         }
 
-        return addedBanks.map(bank => {
-            const countryBanks = banks[bank.countryCode];
+        return addedBanks
+            .filter(bank => typeof banks[bank.countryCode] !== 'undefined')
+            .map(bank => {
+                const countryBanks = banks[bank.countryCode];
 
-            return {
-                ...bank,
-                bankName: countryBanks.find(({ service }) => service === bank.service).fullname,
-            }
+                const supportedBank = countryBanks.find(({ service }) => service === bank.service) || {};
+
+                return {
+                    ...bank,
+                    bank: supportedBank,
+                }
         });
     }, [addedBanks, banks]);
 
@@ -46,7 +52,7 @@ const Home: NextPage = () => {
                         <Box sx={{ pt: 2 }} display={'grid'} gap={'12px'} gridTemplateColumns={'repeat(auto-fill, minmax(250px, 1fr))'}>
                             {
                                 accounts.map(account =>
-                                    <NextLink href={`/service/${account.id}`} key={account.id}>
+                                    <NextLink href={`/service/${account.id}`} key={account.id} prefetch={false}>
                                         <Link>
                                             <Box>
                                                 <Paper sx={{
@@ -59,7 +65,7 @@ const Home: NextPage = () => {
                                                 }}
                                                        elevation={0}>
                                                     <Typography component="h4" variant="h6" align="center" color={(theme => theme.palette.secondary.light)}>
-                                                        {account.bankName}
+                                                        {account.bank.fullname}
                                                     </Typography>
                                                     <Typography sx={{ pt: 1 }} variant="body2" align="center">
                                                         {account.username}

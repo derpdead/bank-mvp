@@ -1,7 +1,8 @@
-import {FC} from "react";
-import {FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {FC, useMemo} from "react";
+import {FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Stack} from "@mui/material";
 import {useBanks} from "../../services/useBanks";
-import {COUNTRY_CODES, SUPPORTED_COUNTRIES} from "../../defaults/countries";
+import {SUPPORTED_COUNTRIES} from "../../defaults/countries";
+import Image from 'next/image';
 
 interface IBankDetailsFormProps {
     countryCode: string;
@@ -15,13 +16,14 @@ const BankDetailsForm: FC<IBankDetailsFormProps> = ({
     onValueChange,
 }) => {
     const banks = useBanks();
+    const countryCodes = useMemo(() => Object.keys(banks), [banks]);
 
     const handleChange = (event: SelectChangeEvent) => {
         onValueChange(event.target.value, event.target.name);
     };
 
     return (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{pt: 1}}>
             <Grid item xs={12}>
                 <FormControl fullWidth required>
                     <InputLabel id="countryCodeLabel">Country</InputLabel>
@@ -35,11 +37,11 @@ const BankDetailsForm: FC<IBankDetailsFormProps> = ({
                         fullWidth
                         onChange={handleChange}>
                         {
-                            COUNTRY_CODES.map(countryCode =>
+                            countryCodes.map(countryCode =>
                                 <MenuItem
                                     key={countryCode}
                                     value={countryCode}>
-                                    { SUPPORTED_COUNTRIES[countryCode] }
+                                    {SUPPORTED_COUNTRIES[countryCode]}
                                 </MenuItem>
                             )
                         }
@@ -63,7 +65,13 @@ const BankDetailsForm: FC<IBankDetailsFormProps> = ({
                                 <MenuItem
                                     key={bank.service}
                                     value={bank.service}>
-                                    { bank.fullname }
+                                    <Stack direction={'row'} alignItems={'center'}>
+                                        <Image
+                                            src={bank.imageSVG}
+                                            width={40}
+                                            height={40} />
+                                            {bank.fullname}
+                                    </Stack>
                                 </MenuItem>
                             )
                         }
