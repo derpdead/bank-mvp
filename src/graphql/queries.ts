@@ -9,9 +9,7 @@ export const getBank = /* GraphQL */ `
       cognitoId
       countryCode
       service
-      username
-      password
-      accountId
+      token
       createdAt
       updatedAt
     }
@@ -29,9 +27,7 @@ export const listBanks = /* GraphQL */ `
         cognitoId
         countryCode
         service
-        username
-        password
-        accountId
+        token
         createdAt
         updatedAt
       }

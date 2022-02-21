@@ -12,9 +12,7 @@ export const createBank = /* GraphQL */ `
       cognitoId
       countryCode
       service
-      username
-      password
-      accountId
+      token
       createdAt
       updatedAt
     }
@@ -30,9 +28,7 @@ export const updateBank = /* GraphQL */ `
       cognitoId
       countryCode
       service
-      username
-      password
-      accountId
+      token
       createdAt
       updatedAt
     }
@@ -48,9 +44,7 @@ export const deleteBank = /* GraphQL */ `
       cognitoId
       countryCode
       service
-      username
-      password
-      accountId
+      token
       createdAt
       updatedAt
     }

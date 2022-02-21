@@ -9,9 +9,7 @@ export const onCreateBank = /* GraphQL */ `
       cognitoId
       countryCode
       service
-      username
-      password
-      accountId
+      token
       createdAt
       updatedAt
     }
@@ -24,9 +22,7 @@ export const onUpdateBank = /* GraphQL */ `
       cognitoId
       countryCode
       service
-      username
-      password
-      accountId
+      token
       createdAt
       updatedAt
     }
@@ -39,9 +35,7 @@ export const onDeleteBank = /* GraphQL */ `
       cognitoId
       countryCode
       service
-      username
-      password
-      accountId
+      token
       createdAt
       updatedAt
     }
