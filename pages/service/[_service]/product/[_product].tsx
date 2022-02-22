@@ -36,12 +36,9 @@ const Product: FC = ({ bank }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await axios.post('/api/form', {bank, products: query._product, startdate: format(startDate, 'dd-MM-yyyy')});
-                const product = result.data.find(service => service.product === query._product)
+                const result = await axios.post('/api/transactions', {bank, products: query._product, startDate: format(startDate, 'dd-MM-yyyy')});
 
-                if (product) {
-                    setTransactions(product.transactions);
-                }
+                setTransactions(result.data);
 
                 setShouldRefresh(false);
             } catch (e) {
@@ -54,6 +51,8 @@ const Product: FC = ({ bank }) => {
             fetchData();
         }
     }, [isFallback, shouldRefresh]);
+
+    console.log(transactions);
 
     if (isFallback) {
         return (
@@ -127,13 +126,13 @@ const Product: FC = ({ bank }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {transactions.map((row) => (
-                                <TableRow key={row.transactionId}>
+                            {transactions.map((row, index) => (
+                                <TableRow key={index}>
                                     <TableCell>{row.date}</TableCell>
                                     <TableCell>{row.date2}</TableCell>
                                     <TableCell>{row.description}</TableCell>
                                     <TableCell>{row.amount}</TableCell>
-                                    <TableCell align="right">{`$${row.balance}`}</TableCell>
+                                    <TableCell align="right">{`${row.currency} ${row.balance}`}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

@@ -21,7 +21,9 @@ const Service: FC = ({ bank }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await axios.post('/api/form', { bank });
+                const result = await axios.post('/api/transactions', { bank });
+
+                console.log(result);
 
                 setProducts(result.data);
             } catch (e) {

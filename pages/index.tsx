@@ -2,13 +2,11 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import {useBankList} from "../src/services/useBankList";
 import {Box, Button, Container, Grid, Link, Paper, Typography} from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import AddBankAccountButton from "../src/components/Buttons/AddBankAccountButton";
-import {useEffect, useMemo} from "react";
+import {useMemo} from "react";
 import {useBanks} from "../src/services/useBanks";
 import NextLink from 'next/link'
-import {GET_SUPPORTED_BANK_LIST_URL} from "../src/defaults/services";
-import axios from "axios";
+import {COUNTRY_CODES, SUPPORTED_COUNTRIES} from "../src/defaults/countries";
 
 const Home: NextPage = () => {
     const banks = useBanks();
@@ -68,7 +66,7 @@ const Home: NextPage = () => {
                                                         {account.bank.fullname}
                                                     </Typography>
                                                     <Typography sx={{ pt: 1 }} variant="body2" align="center">
-                                                        {account.username}
+                                                        {SUPPORTED_COUNTRIES[account.bank.countryCode]}
                                                     </Typography>
                                                 </Paper>
                                             </Box>

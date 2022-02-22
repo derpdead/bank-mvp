@@ -5,15 +5,11 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
-    Step, StepLabel,
-    Stepper
 } from "@mui/material";
 import BankDetailsForm from "../Forms/BankDetailsForm";
 import BankCredentialsForm from "../Forms/BankCredentialsForm";
 import axios from "axios";
-import {GET_BANK_ACCOUNT_URL} from "../../defaults/services";
 import {API, Auth, graphqlOperation} from "aws-amplify";
 import {createBank} from "../../graphql/mutations";
 import {mutate} from "swr";
@@ -61,14 +57,17 @@ const AddBankAccountDialog: FC<IAddBankAccountDialogProps> = ({
             }
         } else {
             // setActiveStep(activeStep + 1);
+            const user = await Auth.currentUserInfo();
 
             try {
                 const response = await axios.post('/api/consent-get', {
+                    countryCode: data.countryCode,
+                    cognitoId: user.id,
                     service: data.service,
                     redirectTo: window.location.href,
                 });
 
-                global.open(response.data.follow, '_new');
+                global.open(response.data.follow, '_self');
 
                 // onClose();
             } catch (e) {

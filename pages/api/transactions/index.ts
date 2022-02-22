@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {GET_BANK_ACCOUNT_URL} from "../../../src/defaults/services";
+import {POST_TRANSACTIONS} from "../../../src/defaults/services";
 import axios from "axios";
+const FormData = require('form-data');
 
 type ResponseData = {
     message: string
@@ -11,21 +12,17 @@ export default async function handler(
     res: NextApiResponse<ResponseData>
 ) {
     try {
-        const FormData = require('form-data');
-
         const formData = new FormData();
 
+        const { service, token } = req.body.bank;
+
         formData.append('servicekey', 'l0vz1obtyaxlpfwl');
-        formData.append('service', req.body.bank.service);
-        formData.append('user', req.body.bank.username);
-        formData.append('pass', req.body.bank.password);
+        formData.append('service', service);
+        formData.append('token', token);
         formData.append('products', req.body.products ? req.body.products : 'GLOBAL');
+        formData.append('startDate', req.body.startDate);
 
-        if (req.body.startdate) {
-            formData.append('startdate', req.body.startdate);
-        }
-
-        const result = await axios.post(GET_BANK_ACCOUNT_URL, formData, {
+        const result = await axios.post(POST_TRANSACTIONS, formData, {
             headers: formData.getHeaders()
         });
 

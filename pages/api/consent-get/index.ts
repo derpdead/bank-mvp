@@ -14,12 +14,14 @@ export default async function handler(
         const FormData = require('form-data');
         const formData = new FormData();
 
+        const { service, redirectTo, cognitoId, countryCode } = req.body;
+
         formData.append('servicekey', 'l0vz1obtyaxlpfwl');
-        formData.append('service', req.body.service);
+        formData.append('service', service);
         formData.append('grantType', 'read');
         formData.append('validUntil', '15-05-2022');
-        // formData.append('yourConsentCallback', req.body.redirectTo);
-        formData.append('yourConsentCallback', 'https://www.google.com');
+        formData.append('urlRedirect', redirectTo);
+        formData.append('yourConsentCallback', `${redirectTo}/api/consent-callback-get?service=${service}&cognitoId=${cognitoId}&countryCode=${countryCode}`);
 
         const result = await axios.post(POST_CONSENT_GET, formData, {
             headers: formData.getHeaders()
