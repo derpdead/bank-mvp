@@ -38,7 +38,9 @@ const Product: FC = ({ bank }) => {
             try {
                 const result = await axios.post('/api/transactions', {bank, products: query._product, startDate: format(startDate, 'dd-MM-yyyy')});
 
-                setTransactions(result.data);
+                if (Array.isArray(result.data) && result.data.length) {
+                    setTransactions(result.data);
+                }
 
                 setShouldRefresh(false);
             } catch (e) {
@@ -51,8 +53,6 @@ const Product: FC = ({ bank }) => {
             fetchData();
         }
     }, [isFallback, shouldRefresh]);
-
-    console.log(transactions);
 
     if (isFallback) {
         return (

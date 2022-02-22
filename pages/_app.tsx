@@ -12,7 +12,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 Amplify.configure({...awsconfig, ssr: true });
 
-function MyApp({ Component, pageProps, signOut, user }: AppProps) {
+function MyApp({ Component, pageProps, signOut }: AppProps) {
     useBanks();
 
     const onClick = async () => {

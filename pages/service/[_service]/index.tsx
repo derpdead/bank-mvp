@@ -23,9 +23,9 @@ const Service: FC = ({ bank }) => {
             try {
                 const result = await axios.post('/api/transactions', { bank });
 
-                console.log(result);
-
-                setProducts(result.data);
+                if (Array.isArray(result.data) && result.data.length) {
+                    setProducts(result.data);
+                }
             } catch (e) {
                 setIsError(true);
             }
