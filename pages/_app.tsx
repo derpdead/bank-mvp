@@ -9,11 +9,17 @@ import {AppBar, Box, Button, Toolbar, Typography} from "@mui/material";
 import {useBanks} from "../src/services/useBanks";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import {useEffect} from "react";
+import axios from "axios";
 
 Amplify.configure({...awsconfig, ssr: true });
 
 function MyApp({ Component, pageProps, signOut }: AppProps) {
     useBanks();
+
+    useEffect(() => {
+        axios.get('/api/test-ssr')
+    }, [])
 
     const onClick = async () => {
         await signOut();
