@@ -3,7 +3,7 @@ import {useRouter} from "next/router";
 import {GetStaticPaths, GetStaticProps} from "next";
 import {API, graphqlOperation} from "aws-amplify";
 
-import {Box, Button, Container, Grid, Link, Paper, Typography} from "@mui/material";
+import {Box, Button, Container, Grid, LinearProgress, Link, Paper, Typography} from "@mui/material";
 
 import NextLink from "next/link";
 import {getBank} from "../../../src/graphql/queries";
@@ -36,7 +36,11 @@ const Service: FC = ({ bank }) => {
         }
     }, [isFallback]);
 
-    if (isFallback) return <div>Loading...</div>
+    if (isFallback) return <div>
+        <Box sx={{ mt: 1 }}>
+            <LinearProgress />
+        </Box>
+    </div>
 
     if (isError) {
         return (
@@ -73,6 +77,7 @@ const Service: FC = ({ bank }) => {
                                         <Box>
                                             <Paper sx={{
                                                 p: 2,
+                                                cursor: 'pointer',
                                                 display: 'flex',
                                                 flexDirection: 'column',
                                                 height: '100%',
@@ -80,10 +85,10 @@ const Service: FC = ({ bank }) => {
                                                 border: (theme) =>  `1px solid ${theme.palette.grey[300]}`,
                                             }}
                                                    elevation={0}>
-                                                <Typography component="h4" variant="h6" align="center" color={(theme => theme.palette.secondary.light)}>
+                                                <Typography style={{ textDecoration: 'unset', wordBreak: 'break-all' }} component="h4" variant="h6" align="center" color={(theme => theme.palette.secondary.light)}>
                                                     {product.product}
                                                 </Typography>
-                                                <Typography sx={{ pt: 1 }} variant="body2" align="center">
+                                                <Typography style={{ textDecoration: 'unset', wordBreak: 'break-all' }} sx={{ pt: 1 }} variant="body2" align="center">
                                                     {product.description}
                                                 </Typography>
                                             </Paper>

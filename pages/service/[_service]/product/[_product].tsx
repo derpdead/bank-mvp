@@ -3,7 +3,7 @@ import {useRouter} from "next/router";
 import {
     Box, Button,
     Container,
-    Grid,
+    Grid, LinearProgress,
     Link,
     Paper,
     Table,
@@ -26,7 +26,7 @@ const Product: FC = ({ bank }) => {
     const [startDate, setStartDate] = useState(initStartDate);
     const [shouldRefresh, setShouldRefresh] = useState(true);
     const [isError, setIsError] = useState(false);
-    const [transactions, setTransactions] = useState([]);
+    const [product, setProduct] = useState([]);
     const {
         isFallback,
         query,
@@ -37,9 +37,10 @@ const Product: FC = ({ bank }) => {
         const fetchData = async () => {
             try {
                 const result = await axios.post('/api/transactions', {bank, products: query._product, startDate: format(startDate, 'dd-MM-yyyy')});
+                const product = result.data.find(service => service.product === query._product)
 
-                if (Array.isArray(result.data) && result.data.length) {
-                    setTransactions(result.data);
+                if (product) {
+                    setProduct(product);
                 }
 
                 setShouldRefresh(false);
@@ -54,12 +55,13 @@ const Product: FC = ({ bank }) => {
         }
     }, [isFallback, shouldRefresh]);
 
+
     if (isFallback) {
-        return (
-            <div>
-                Loading...
-            </div>
-        );
+        return <div>
+            <Box sx={{ mt: 1 }}>
+                <LinearProgress />
+            </Box>
+        </div>
     }
 
     if (isError) {
@@ -103,6 +105,7 @@ const Product: FC = ({ bank }) => {
                                 <Button
                                     variant={'contained'}
                                     size={'small'}
+                                    disabled={shouldRefresh}
                                     onClick={handleClickRefresh}>
                                     Refresh
                                 </Button>
@@ -115,6 +118,12 @@ const Product: FC = ({ bank }) => {
                             </Button>
                         </Box>
                     </Box>
+                    {
+                        shouldRefresh &&
+                        <Box sx={{ mb: 1 }}>
+                            <LinearProgress />
+                        </Box>
+                    }
                     <Table size="small">
                         <TableHead>
                             <TableRow>
@@ -126,15 +135,18 @@ const Product: FC = ({ bank }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {transactions.map((row, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{row.date}</TableCell>
-                                    <TableCell>{row.date2}</TableCell>
-                                    <TableCell>{row.description}</TableCell>
-                                    <TableCell>{row.amount}</TableCell>
-                                    <TableCell align="right">{`${row.currency} ${row.balance}`}</TableCell>
-                                </TableRow>
-                            ))}
+                            {
+                                product.transactions &&
+                                product.transactions.map(row => (
+                                    <TableRow key={row.transactionId}>
+                                        <TableCell>{row.date}</TableCell>
+                                        <TableCell>{row.date2}</TableCell>
+                                        <TableCell>{row.description}</TableCell>
+                                        <TableCell align="right">{`${product.currency} ${row.amount}`}</TableCell>
+                                        <TableCell align="right">{`${product.currency} ${row.balance}`}</TableCell>
+                                    </TableRow>
+                                ))
+                            }
                         </TableBody>
                     </Table>
                 </Paper>

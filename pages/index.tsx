@@ -1,19 +1,21 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import {useBankList} from "../src/services/useBankList";
-import {Box, Button, Container, Grid, Link, Paper, Typography} from "@mui/material";
+import {Box, Button, Container, Grid, LinearProgress, Link, Paper, Typography} from "@mui/material";
 import AddBankAccountButton from "../src/components/Buttons/AddBankAccountButton";
 import {useMemo} from "react";
 import {useBanks} from "../src/services/useBanks";
 import NextLink from 'next/link'
-import {COUNTRY_CODES, SUPPORTED_COUNTRIES} from "../src/defaults/countries";
+import { SUPPORTED_COUNTRIES} from "../src/defaults/countries";
+import {Flex} from "@aws-amplify/ui-react";
+import Image from "next/image";
 
 const Home: NextPage = () => {
     const banks = useBanks();
     const addedBanks = useBankList();
 
     const accounts = useMemo(() => {
-        if (Object.keys(banks).length === 0) {
+        if (!banks) {
             return [];
         }
 
@@ -45,16 +47,23 @@ const Home: NextPage = () => {
                             <Typography component="h2" variant="h6" color="primary" gutterBottom>
                                 Bank accounts
                             </Typography>
-                            <AddBankAccountButton />
+                            <AddBankAccountButton disabled={!banks} />
                         </Box>
+                        {
+                            !banks &&
+                            <Box sx={{ mt: 1 }}>
+                                <LinearProgress />
+                            </Box>
+                        }
                         <Box sx={{ pt: 2 }} display={'grid'} gap={'12px'} gridTemplateColumns={'repeat(auto-fill, minmax(250px, 1fr))'}>
                             {
                                 accounts.map(account =>
                                     <NextLink href={`/service/${account.id}`} key={account.id} prefetch={false}>
-                                        <Link>
+                                        <Link style={{ textDecoration: 'none' }}>
                                             <Box>
                                                 <Paper sx={{
                                                     p: 2,
+                                                    cursor: 'pointer',
                                                     display: 'flex',
                                                     flexDirection: 'column',
                                                     height: '100%',
@@ -62,12 +71,25 @@ const Home: NextPage = () => {
                                                     border: (theme) =>  `1px solid ${theme.palette.grey[300]}`,
                                                 }}
                                                        elevation={0}>
-                                                    <Typography component="h4" variant="h6" align="center" color={(theme => theme.palette.secondary.light)}>
-                                                        {account.bank.fullname}
-                                                    </Typography>
-                                                    <Typography sx={{ pt: 1 }} variant="body2" align="center">
-                                                        {SUPPORTED_COUNTRIES[account.countryCode]}
-                                                    </Typography>
+                                                    <Flex alignItems="center">
+                                                        <Image
+                                                            src={account.bank.imageSVG}
+                                                            width={48}
+                                                            height={48} />
+                                                        <Typography style={{ textDecoration: 'unset', wordBreak: 'break-all' }} component="h4" variant="h6" align="center" color={(theme => theme.palette.secondary.light)}>
+                                                            {account.bank.fullname}
+                                                        </Typography>
+                                                    </Flex>
+                                                    <Flex alignItems="center">
+                                                        <Typography style={{ textDecoration: 'unset', wordBreak: 'break-all' }} sx={{ pt: 1 }} variant="body2" align="center">
+                                                            {`Country: ${SUPPORTED_COUNTRIES[account.countryCode]}`}
+                                                        </Typography>
+                                                    </Flex>
+                                                    <Flex alignItems="center">
+                                                        <Typography style={{ textDecoration: 'unset', wordBreak: 'break-all' }} sx={{ pt: 1 }} variant="body2" align="center">
+                                                            {`Swift: ${account.bank.swift}`}
+                                                        </Typography>
+                                                    </Flex>
                                                 </Paper>
                                             </Box>
                                         </Link>

@@ -3,7 +3,11 @@ import AddIcon from "@mui/icons-material/Add";
 import {Button} from "@mui/material";
 import AddBankAccountDialog from "../Dialogs/AddBankAccountDialog";
 
-const AddBankAccountButton: FC = () => {
+interface IAddBankAccountButtonProps {
+    disabled: boolean;
+}
+
+const AddBankAccountButton: FC<IAddBankAccountButtonProps> = ({ disabled }) => {
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -19,6 +23,7 @@ const AddBankAccountButton: FC = () => {
             <Button
                 variant={'contained'}
                 size={'small'}
+                disabled={disabled}
                 startIcon={
                     <AddIcon />
                 }

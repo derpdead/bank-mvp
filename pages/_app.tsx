@@ -17,10 +17,6 @@ Amplify.configure({...awsconfig, ssr: true });
 function MyApp({ Component, pageProps, signOut }: AppProps) {
     useBanks();
 
-    useEffect(() => {
-        axios.get('/api/test-ssr')
-    }, [])
-
     const onClick = async () => {
         await signOut();
     }

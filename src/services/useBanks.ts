@@ -13,7 +13,7 @@ export interface IBankDTO {
 
 export const useBanks = () => {
     const {
-        data = [],
+        data,
     } = useSWRImmutable('banks', async () => axios.get<Array<IBankDTO>>('/api/listOfSupportedBanks').then(response => response.data));
 
     return data;
