@@ -66,7 +66,7 @@ const Home: NextPage = () => {
                                                         {account.bank.fullname}
                                                     </Typography>
                                                     <Typography sx={{ pt: 1 }} variant="body2" align="center">
-                                                        {SUPPORTED_COUNTRIES[account.bank.countryCode]}
+                                                        {SUPPORTED_COUNTRIES[account.countryCode]}
                                                     </Typography>
                                                 </Paper>
                                             </Box>
