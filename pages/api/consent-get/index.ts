@@ -21,7 +21,7 @@ export default async function handler(
         formData.append('grantType', 'read');
         formData.append('validUntil', '15-05-2022');
         formData.append('urlRedirect', redirectTo);
-        formData.append('yourConsentCallback', `${redirectTo}/api/consent-callback-get?service=${service}&cognitoId=${cognitoId}&countryCode=${countryCode}`);
+        formData.append('yourConsentCallback', `${redirectTo}api/consent-callback-get?service=${service}&cognitoId=${cognitoId}&countryCode=${countryCode}`);
 
         const result = await axios.post(POST_CONSENT_GET, formData, {
             headers: formData.getHeaders()
