@@ -14,6 +14,13 @@ export default async function handler(
         const { token } = req.body;
         const { service, cognitoId, countryCode } = req.query;
 
+        console.log('INSERTING QUERY: ', {
+            cognitoId,
+            countryCode,
+            service,
+            token,
+        });
+
         await API.graphql(graphqlOperation(createBank, {
             input: {
                 cognitoId,
