@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {API, graphqlOperation} from "aws-amplify";
+import { graphqlOperation} from "aws-amplify";
 import {createBank} from "../../../src/graphql/mutations";
+import { withSSRContext } from "aws-amplify";
 
 type ResponseData = {
     message: string
@@ -14,14 +15,9 @@ export default async function handler(
         const { token } = req.body;
         const { service, cognitoId, countryCode } = req.query;
 
-        console.log('INSERTING QUERY: ', {
-            cognitoId,
-            countryCode,
-            service,
-            token,
-        });
+        const SSR = withSSRContext({ req })
 
-        await API.graphql(graphqlOperation(createBank, {
+        await SSR.API.graphql(graphqlOperation(createBank, {
             input: {
                 cognitoId,
                 countryCode,
