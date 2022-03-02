@@ -26,9 +26,12 @@ export default async function handler(
             },
         }));
 
-        return res.status(200).end();
+        return res.status(200).json({
+            result: "OK",
+            reason: "Datos recibidos correctamente por el callback del cliente"
+        })
     } catch (e) {
         console.log(e);
-        return res.status(500).end();
+        return res.status(500);
     }
 }
