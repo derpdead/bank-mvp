@@ -11,6 +11,7 @@ import axios from "../../../src/services/axios";
 
 const Service: FC = ({ bank }) => {
     const [isError, setIsError] = useState(false);
+    const [isPending, setIsPending] = useState(false);
     const [products, setProducts] = useState([]);
     const {
         isFallback,
@@ -21,13 +22,18 @@ const Service: FC = ({ bank }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setIsPending(true);
+
                 const result = await axios.post('/api/transactions', { bank });
 
                 if (Array.isArray(result.data) && result.data.length) {
                     setProducts(result.data);
                 }
+
+                setIsPending(false);
             } catch (e) {
                 setIsError(true);
+                setIsPending(false);
             }
         }
 
@@ -69,6 +75,12 @@ const Service: FC = ({ bank }) => {
                             Back
                         </Button>
                     </Box>
+                    {
+                        isPending &&
+                        <Box sx={{ mt: 1 }}>
+                            <LinearProgress />
+                        </Box>
+                    }
                     <Box sx={{ pt: 2 }} display={'grid'} gap={'12px'} gridTemplateColumns={'repeat(auto-fill, minmax(250px, 1fr))'}>
                         {
                             products.map(product =>

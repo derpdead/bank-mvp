@@ -4,7 +4,8 @@ import {createBank} from "../../../src/graphql/mutations";
 import { withSSRContext } from "aws-amplify";
 
 type ResponseData = {
-    message: string
+    result: string
+    reason: string
 }
 
 export default async function handler(
@@ -31,7 +32,6 @@ export default async function handler(
             reason: "Datos recibidos correctamente por el callback del cliente"
         })
     } catch (e) {
-        console.log(e);
         return res.status(500);
     }
 }
