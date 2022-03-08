@@ -27,6 +27,9 @@ export default async function handler(
             },
         }));
 
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+
         return res.status(200).json({
             result: "OK",
             reason: "Datos recibidos correctamente por el callback del cliente"
